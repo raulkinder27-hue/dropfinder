@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#f26a0f">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<title>DropFinder – viral cheap products</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f5f5;--card:#fff;--ink:#222;--mute:#666;--line:#e6e6e6;--org:#f26a0f;--acc:#d9480f;--price:#d9480f;--hot:#ffd23f;--ok:#0a8f5b;--blue:#0064d2;--t1:#fff3e6;--t2:#ffe0c2;--pbg:#e6f7ef;--pfg:#0a6b45;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root{--bg:#121212;--card:#1e1e1e;--ink:#f1f1f1;--mute:#a8a8a8;--line:#333;--ok:#3ddc97;--blue:#5aa2ff;--price:#ff8a4c;--acc:#e8590c;--t1:#2b2118;--t2:#3a2a1c;--pbg:#12372a;--pfg:#6ee7b0}}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.45 'DM Sans',system-ui,sans-serif;padding-bottom:76px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:#f26a0f;z-index:40}
+.wrap{max-width:1100px;margin:0 auto}
+header{background:linear-gradient(135deg,#f26a0f,#e8590c);position:sticky;top:env(safe-area-inset-top,0px);z-index:20;padding:8px 12px 10px}
+.hw{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px}
+.brand{font:800 24px 'Bricolage Grotesque',sans-serif;letter-spacing:-.02em;color:#fff;text-decoration:none}
+.brand span{background:#fff;color:#d9480f;padding:0 6px;border-radius:6px;margin-left:2px}
+.hsearch{order:3;flex:1 1 100%;display:none;position:relative}
+body[data-v="products"] .hsearch{display:block}
+.hsearch input{border-radius:99px;border:2px solid #fff;padding:10px 46px 10px 16px;background:#fff;color:#222}
+.hsearch .sb{position:absolute;right:4px;top:4px;width:36px;height:36px;border-radius:50%;background:#d9480f;display:grid;place-items:center;font-size:16px;pointer-events:none}
+#nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);z-index:30}
+#nav a{flex:1;display:grid;justify-items:center;padding:6px 0;min-height:56px;color:var(--mute);text-decoration:none;font-size:11px}
+#nav a i{font-style:normal;font-size:22px;line-height:1.2}
+#nav a[aria-current=page]{color:var(--price);font-weight:700}
+@media(min-width:760px){body{padding-bottom:0}.hw{flex-wrap:nowrap}.hsearch{order:0;flex:1}#nav{position:static;background:none;border:0;padding:0;flex:none}#nav a{flex:none;display:flex;gap:6px;align-items:center;color:#fff;font-size:14px;padding:8px 12px;min-height:44px;border-radius:8px}#nav a i{font-size:16px}#nav a[aria-current=page]{background:#ffffff33;color:#fff}}
+main{padding:10px 12px 16px}
+.view{display:none}.view.on{display:block}
+input,select{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px 12px;width:100%;min-height:44px}
+.row{display:flex;gap:8px;align-items:center}
+.trust{display:flex;gap:8px;overflow-x:auto;margin-bottom:10px}
+.trust span{flex:none;background:var(--card);border-radius:99px;padding:6px 12px;font-size:13px;color:var(--ink)}
+.banner{background:linear-gradient(120deg,#f26a0f,#c2410c);color:#fff;border-radius:12px;padding:16px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:6px}
+.banner h2{color:#fff;font-size:22px;margin:0 0 4px}.banner p{margin:0;font-size:14px;opacity:.95;max-width:46ch}
+.banner .btn{background:#fff;color:#c2410c}
+.cats{display:flex;gap:4px;overflow-x:auto;padding:10px 0 6px}
+.cat{flex:none;width:68px;background:none;border:0;display:grid;justify-items:center;gap:4px;font:inherit;font-size:12px;color:var(--ink);cursor:pointer;padding:0;min-height:44px}
+.ci{width:52px;height:52px;border-radius:50%;background:var(--card);border:2px solid transparent;display:grid;place-items:center;font-size:24px}
+.cat[aria-pressed=true] .ci{border-color:var(--price)}
+.cat[aria-pressed=true]{color:var(--price);font-weight:700}
+.sh{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:8px 0 10px;flex-wrap:wrap}
+.sh h2{margin:0}.sh select{width:auto}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:99px;padding:7px 14px;font:500 14px 'DM Sans',sans-serif;cursor:pointer;min-height:44px}
+.chip[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+@media(min-width:600px){.grid{grid-template-columns:repeat(3,1fr);gap:12px}}
+@media(min-width:900px){.grid{grid-template-columns:repeat(4,1fr)}}
+.pc{background:var(--card);border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+.pimg{aspect-ratio:1/1;display:grid;place-items:center;font-size:64px;background:linear-gradient(135deg,var(--t1),var(--t2));position:relative}
+.hot{position:absolute;left:6px;top:6px;background:var(--card);color:var(--price);font:700 12px 'DM Sans',sans-serif;border-radius:99px;padding:2px 8px}
+.fav{position:absolute;right:0;top:0;background:none;border:0;font-size:24px;cursor:pointer;color:var(--mute);min-width:44px;min-height:44px}
+.fav[aria-pressed=true]{color:#e11d48}
+.pb{padding:8px 10px 10px;display:flex;flex-direction:column;gap:6px;flex:1}
+.pb h3{margin:0;font:500 14px/1.3 'DM Sans',sans-serif;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.6em}
+.pr{display:flex;align-items:center;gap:6px}
+.pr b{font:800 21px 'Bricolage Grotesque',sans-serif;color:var(--price)}
+.pr small{color:var(--mute);font-size:12px}
+.add{margin-left:auto;width:44px;height:44px;border-radius:50%;border:0;background:var(--acc);color:#fff;font-size:26px;line-height:1;cursor:pointer}
+.pp{align-self:flex-start;background:var(--pbg);color:var(--pfg);font:700 12px 'DM Sans',sans-serif;border-radius:4px;padding:2px 6px}
+.mk{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:auto}
+.mk a{font:700 12px 'DM Sans',sans-serif;text-align:center;color:#fff;border-radius:6px;min-height:40px;display:grid;place-items:center;text-decoration:none}
+.az{background:#232f3e}.tm{background:#c2410c}.eb{background:#0064d2}
+.buy{display:grid;place-items:center;min-height:44px;border-radius:8px;background:var(--ink);color:var(--card);font-weight:700;text-decoration:none}
+.btn{font:700 15px 'DM Sans',sans-serif;border:0;border-radius:99px;min-height:44px;padding:0 18px;cursor:pointer;background:var(--ink);color:var(--card);text-decoration:none;display:inline-grid;place-items:center}
+.btn.acc{background:var(--acc);color:#fff}.btn.ghost{background:none;border:1px solid var(--line);color:var(--ink)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.tag{display:inline-block;font-size:12px;font-weight:700;background:var(--hot);color:#14213d;border-radius:6px;padding:2px 7px;vertical-align:middle}
+.meta{color:var(--mute);font-size:14px;margin:0}
+h2{font:800 22px 'Bricolage Grotesque',sans-serif;margin:0 0 12px}
+h3.s{font:700 18px 'Bricolage Grotesque',sans-serif;margin:0 0 10px}
+.panel{background:var(--card);border-radius:12px;padding:14px;margin-bottom:12px}
+.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+label{font-size:13px;color:var(--mute);display:grid;gap:4px}
+.out{margin-top:12px;font-size:18px;font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:12px}
+.stat{background:var(--card);border-radius:12px;padding:12px}
+.stat b{display:block;font:800 22px 'Bricolage Grotesque',sans-serif}.stat small{color:var(--mute)}
+.entry{display:grid;grid-template-columns:auto 1fr auto auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.entry:last-child{border:0}
+.entry .d{color:var(--mute);font-size:13px}
+.entry button{background:none;border:0;color:var(--mute);font-size:20px;cursor:pointer;min-width:44px;min-height:44px}
+.pos{color:var(--ok);font-weight:700}.neg{color:var(--price);font-weight:700}
+svg.ch{width:100%;height:auto;display:block}
+.legend{display:flex;gap:16px;color:var(--mute);font-size:13px;margin-top:6px;flex-wrap:wrap}
+.msg{padding:10px 12px;border-radius:10px;background:var(--bg);color:var(--mute);margin-bottom:12px}
+.msg.err{color:var(--price)}
+.empty{padding:26px;text-align:center;color:var(--mute);grid-column:1/-1}
+.how{color:var(--mute);font-size:14px}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #1d4ed8;outline-offset:2px}
+footer{padding:12px 16px 30px;color:var(--mute);font-size:13px}
+.pimg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:var(--card)}
+.hot,.fav{z-index:1}
+</style>
+</head>
+<body>
+<header><div class="wrap hw">
+<a class="brand" href="#products">Drop<span>Finder</span></a>
+<form class="hsearch" role="search" onsubmit="return false"><input id="q" type="search" placeholder="Search viral products" aria-label="Search products"><span class="sb" aria-hidden="true">🔍</span></form>
+<nav id="nav" aria-label="Main">
+<a href="#products" data-v="products"><i aria-hidden="true">🏠</i><span>Home</span></a>
+<a href="#calc" data-v="calc"><i aria-hidden="true">🧮</i><span>Calc</span></a>
+<a href="#log" data-v="log"><i aria-hidden="true">📒</i><span>Log</span></a>
+<a href="#chart" data-v="chart"><i aria-hidden="true">📈</i><span>Charts</span></a>
+<a href="#pay" data-v="pay"><i aria-hidden="true">💳</i><span>Payments</span></a>
+<a href="#account" data-v="account" id="navAcc"><i aria-hidden="true">👤</i><span>Account</span></a>
+</nav>
+</div></header>
+
+<main><div class="wrap">
+
+<section class="view" id="v-products">
+<div class="trust"><span>🔍 Compare 3 marketplaces</span><span>🧮 Check your profit</span><span>📈 Track your sales</span></div>
+<div class="banner"><div><h2>Find your next viral product</h2><p>Compare prices on Amazon, Temu and eBay, then check your profit before you sell.</p></div><a class="btn" href="#calc">Profit calculator</a></div>
+<div class="cats" id="chips" role="group" aria-label="Category"></div>
+<div class="sh"><h2>Trending now</h2><div class="row"><select id="sort" aria-label="Sort"><option value="hot">Most viral</option><option value="margin">Best margin</option><option value="cheap">Cheapest to source</option></select><button class="chip" id="favOnly" aria-pressed="false">♥ Saved</button></div></div>
+<div class="grid" id="grid"></div>
+</section>
+
+<section class="view" id="v-calc">
+<h2>Profit calculator</h2>
+<div class="panel"><div class="cg">
+<label>Source cost ($)<input id="c1" type="number" inputmode="decimal" value="4"></label>
+<label>Shipping to buyer ($)<input id="c2" type="number" inputmode="decimal" value="0"></label>
+<label>Your sell price ($)<input id="c3" type="number" inputmode="decimal" value="19.99"></label>
+<label>Fees (%)<input id="c4" type="number" inputmode="decimal" value="13"></label>
+<label>Ad cost per sale ($)<input id="c5" type="number" inputmode="decimal" value="5"></label>
+</div><div class="out" id="out"></div></div>
+<div class="how"><ol><li>Open a product on Temu, Amazon and eBay and compare price and reviews.</li><li>Order a sample first. Check quality and real delivery time.</li><li>Test with small ad budgets and keep products that profit after ads.</li></ol></div>
+</section>
+
+<section class="view" id="v-log">
+<h2>Profit log</h2>
+<div class="stats" id="stats"></div>
+<form class="panel" id="logForm">
+<h3 class="s" id="logTitle">Add a sale</h3>
+<div class="cg">
+<label>Date<input id="l-date" type="date" required></label>
+<label>Product<input id="l-name" list="plist" required maxlength="60"></label>
+<label>Revenue ($)<input id="l-rev" type="number" step="0.01" inputmode="decimal" required></label>
+<label>Product cost ($)<input id="l-cost" type="number" step="0.01" inputmode="decimal" value="0"></label>
+<label>Shipping ($)<input id="l-ship" type="number" step="0.01" inputmode="decimal" value="0"></label>
+<label>Fees ($)<input id="l-fee" type="number" step="0.01" inputmode="decimal" value="0"></label>
+<label>Ads ($)<input id="l-ads" type="number" step="0.01" inputmode="decimal" value="0"></label>
+</div>
+<datalist id="plist"></datalist>
+<div id="logNote" style="margin-top:12px"></div>
+<div class="row" style="margin-top:12px"><button class="btn acc" type="submit" id="saveBtn">Save sale</button><button class="btn ghost" type="button" id="csv">Export CSV</button></div>
+</form>
+<div class="panel" id="entries"></div>
+</section>
+
+<section class="view" id="v-chart">
+<h2>Charts</h2>
+<div class="row" id="seg" role="group" aria-label="Chart type" style="margin-bottom:10px"><button class="chip" data-m="sales">Sales</button><button class="chip" data-m="profit">Profit</button><button class="chip" data-m="pay">Payments</button></div>
+<div class="panel">
+<label style="max-width:200px;margin-bottom:10px">Range<select id="range"><option value="7">Last 7 days</option><option value="14" selected>Last 14 days</option><option value="30">Last 30 days</option><option value="12m">Last 12 months</option></select></label>
+<div id="chartBox"></div>
+<div class="legend" id="legend"></div>
+</div>
+<div class="stats" id="stats2"></div>
+</section>
+
+<section class="view" id="v-pay">
+<h2>Payments</h2>
+<div class="stats" id="pstats"></div>
+<form class="panel" id="payForm">
+<h3 class="s">Record a payment</h3>
+<div class="cg">
+<label>Date<input id="p-date" type="date" required></label>
+<label>Type<select id="p-kind"></select></label>
+<label>Method<select id="p-meth"></select></label>
+<label>Amount ($)<input id="p-amt" type="number" step="0.01" min="0.01" inputmode="decimal" required></label>
+<label>Note<input id="p-note" maxlength="120" placeholder="Optional"></label>
+</div>
+<div id="payNote" style="margin-top:12px"></div>
+<div class="row" style="margin-top:12px"><button class="btn acc" type="submit" id="payBtn">Save payment</button><button class="btn ghost" type="button" id="pcsv">Export CSV</button></div>
+</form>
+<div class="panel" id="pentries"></div>
+</section>
+
+<section class="view" id="v-account">
+<h2>Membership</h2>
+<div id="acc"></div>
+</section>
+
+</div></main>
+<footer><div class="wrap">Prices and margins are estimates and change often. Product buttons open marketplace searches, so confirm the exact item. Check marketplace resale rules and your local customs and consumer law before selling.</div></footer>
+
+<script src="products.js"></script>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="backend.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
